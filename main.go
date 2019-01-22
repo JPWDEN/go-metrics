@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	exNum        = 100
+	exNum        = 10
 	stringLength = 15
 	file1        = "previewDebug-3220.txt"
 	file2        = "previewDebug-3892.txt"
@@ -19,6 +19,13 @@ const (
 var statsList []runtime.MemStats
 
 func caseDisassemble() {
+	aNum := 5
+	switch aNum {
+	case 6:
+		aNum = 10
+	case 5:
+		aNum = 0
+	}
 }
 
 func lcsInit() (error, error) {
@@ -165,14 +172,15 @@ func main() {
 		log.Fatal("Cannot create file", err)
 	}
 	defer file.Close()
-
 	discs := 15 //Number of discs
-	for i := 0; i < exNum; i++ {
-		start := time.Now()
-		hanoi(discs, "peg 1", "peg 2", "peg 3")
-		elapsed := time.Since(start)
-		fmt.Println(elapsed)
-		fmt.Fprintf(file, "%d\n", elapsed)
+	for disc := 2; disc < discs; disc = disc + 2 {
+		for i := 0; i < exNum; i++ {
+			start := time.Now()
+			hanoi(disc, "peg 1", "peg 2", "peg 3")
+			elapsed := time.Since(start)
+			fmt.Printf("%d: %s\n", disc, elapsed.String())
+			fmt.Fprintf(file, "%d discs: %s\n", disc, elapsed.String())
+		}
 	}
 
 	start := time.Now()

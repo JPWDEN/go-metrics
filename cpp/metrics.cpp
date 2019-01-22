@@ -1,7 +1,9 @@
+// g++ -std=c++11 metrics.cpp -o metrics
 #include <iostream>
 #include <chrono>
 #include <ctime>
 #include <fstream>
+#include <thread>
 
 using namespace std;
 
@@ -12,6 +14,17 @@ void Hanoi(int discs, char from_rod, char to_rod, char aux_rod)
     Hanoi(discs - 1, from_rod, aux_rod, to_rod);
     Hanoi(discs - 1, aux_rod, to_rod, from_rod);
 }
+
+void CaseDissasemble()
+{
+    int aNum = 5;
+	switch (aNum) {
+	case 5:
+		aNum = 0;
+	case 6:
+		aNum = 10;
+	}
+}
   
 int main()
 {
@@ -19,17 +32,22 @@ int main()
     file.open("hanoi-time-c");
 
     int discs = 15;
-    for (int i = 0; i < 100; i++)
+    for (int disc = 3; disc < discs; disc = disc + 2)
     {
-        auto start = std::chrono::system_clock::now();
-        Hanoi(discs, '1', '2', '3');
-        auto end = std::chrono::system_clock::now();
+        for (int i = 0; i < 100; i++)
+        {
+            auto start = std::chrono::system_clock::now();
+            Hanoi(discs, '1', '2', '3');
+            auto end = std::chrono::system_clock::now();
 
-        chrono::duration<double> elapsed = end - start;
-        cout << "elapsed: " << elapsed.count() << "s\n";
-        file << elapsed.count() << "\n";
-
+            chrono::duration<double> elapsed = end - start;
+            std::cout << disc << " discs: " << elapsed.count() << "s\n";
+            file << disc << " discs: " << elapsed.count() << "s\n";
+        }
     }
     file.close();
+
+    CaseDissasemble();
+
     return 0;
 }
