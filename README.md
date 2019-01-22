@@ -4,6 +4,7 @@ Code for metrics and disassembly
 
 
 #newproc
+
 // Create a new g running fn with siz bytes of arguments.
 // Put it on the queue of g's waiting to run.
 // The compiler turns a go statement into a call to this.
