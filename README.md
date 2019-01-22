@@ -19,9 +19,4 @@ func newproc(siz int32, fn *funcval) {
 	systemstack(func() {
 		newproc1(fn, (*uint8)(argp), siz, gp, pc)
 	})
-}
-
-// Create a new g running fn with narg bytes of arguments starting
-// at argp. callerpc is the address of the go statement that created
-// this. The new g is put on the queue of g's waiting to run.
-```
+}```
