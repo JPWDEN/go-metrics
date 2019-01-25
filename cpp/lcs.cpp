@@ -17,7 +17,6 @@ int LCS(string s1, string s2, vector <string> &arStrings, int iMinStringLength)
 	arStrings.clear();
 	int s1Size = s1.length(), s2Size = s2.length();
 	int iMaxLength = 0, k, l;
-	std::cout << "Proceeding with Brute Force.  Patience";
 	for (int i = 0; i < s1Size; i++)
 	{
 		for (int j = 0; j < s2Size; j++)
@@ -94,9 +93,9 @@ int main(int argc, char* argv[], char* envp[])
 		return 0;
 	}
 	string sTemp;
-	fstream file1, file2;
-	file1.open(sSrc1, ios::binary);
-    file2.open(sSrc2, ios::binary);
+	ifstream file1, file2;
+	file1.open(sSrc1);
+    file2.open(sSrc2);
 	if (!file1.is_open())
 	{
 		std::cout << "\nCannot open file1.\n";
@@ -112,22 +111,23 @@ int main(int argc, char* argv[], char* envp[])
 	long int fSize1 = file1.tellg(), fSize2 = file2.tellg();
 	file1.close();
 	file2.close();
-	file1.open(sSrc1, ios::binary);
-    file2.open(sSrc2, ios::binary);
+	file1.open(sSrc1);
+    file2.open(sSrc2);
 	string in1 = "", in2 = "";
 	sTemp = "";
-	char *btTemp;
 	int iOffset = 0;
     char *memByte = new char;
 	for (int i = 0; i < fSize1; i++)		//Make sure we dont add strings from file 1 that are shorter than our minimum size
 	{
 		file1.read(memByte, 1);
+        cout << memByte;
 		iOffset = 0;
-		while (memByte[0] > 31 &&  memByte[0] < 127)
+		while (memByte[0] > (char)31 &&  memByte[0] < (char)127)
 		{
-			sTemp.append(memByte);
+			sTemp.append(1, memByte[0]);
 			iOffset++;
 			file1.read(memByte, 1);
+            //cout << memByte;
 		}
 		i += iOffset;
 		if (iOffset >= iMinStringLength)
@@ -137,13 +137,15 @@ int main(int argc, char* argv[], char* envp[])
 		}
 		sTemp = "";
 	}
+    //cout << "in1:" << endl << in1 << endl;
+    //cout << "in1 done";
 	for (int i = 0; i < fSize2; i++)		//Make sure we dont add strings from file 2 that are shorter than our minimum size
 	{
 		file2.read(memByte, 1);
 		iOffset = 0;
-		while (memByte[0] > 31 && memByte[0] < 127)
+		while (memByte[0] > (char)31 && memByte[0] < (char)127)
 		{
-			sTemp.append(btTemp);
+			sTemp.append(1, memByte[0]);
 			iOffset++;
 			file2.read(memByte, 1);
 		}
@@ -151,11 +153,13 @@ int main(int argc, char* argv[], char* envp[])
 		if (iOffset >= iMinStringLength)
 		{
 			in2.append(sTemp);
+            cout << sTemp;
 			in2.append("|");		//Delimeter is ascii 166:  |
 		}
 		sTemp = "";
 	}
-	file2.close();
+	cout << in2 << endl;
+    file2.close();
 	file2.close();
 	if (in1 == in2)
 	{
