@@ -6,27 +6,33 @@
 
 using namespace std;
 
-const int MAX = 10;
+const int MAX = 100000;
 
 int main()
 {
     //CPU:  Calculate prime numbers
 	std::vector<int> primes;
     int numPrimes = 0;
+    bool isPrime = false;
     auto start = std::chrono::system_clock::now();
     primes.push_back(1);
-	for (int i = 2; i <= MAX; i++)
+    for (int i = 2; i <= MAX; i++)
     {
+        isPrime = true;
 		for (int hold = i - 1; hold > 1; hold--)
         {
 			if (i % hold == 0)
             {
-                primes.push_back(i);
-                numPrimes++;
-				std::cout << i << std::endl;
+                isPrime = false;
 				break;
-			}
+            }
 		}
+        if (isPrime)
+        {
+            primes.push_back(i);
+            numPrimes++;
+            std::cout << i << std::endl;
+        }
 	}
     auto end = std::chrono::system_clock::now();
     chrono::duration<double> elapsed = end - start;
