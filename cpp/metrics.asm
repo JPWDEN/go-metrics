@@ -3544,7 +3544,7 @@ __Z5Hanoiiccc:
 
 __Z15CaseDissasemblev:
 100001450:	55 	pushq	%rbp                                            ; Save frame pointer on the stack
-100001451:	48 89 e5 	movq	%rsp, %rbp                              ; Move stack pointer into rbp.  Func premable
+100001451:	48 89 e5 	movq	%rsp, %rbp                              ; Move stack pointer into rbp.  Func epilogue
 100001454:	c7 45 fc 05 00 00 00 	movl	$5, -4(%rbp)                ; Fill rbp - 4 with the value of 5 (our aNum var)
 10000145b:	8b 45 fc 	movl	-4(%rbp), %eax                          ; Move our previous value into eax register
 10000145e:	89 c1 	movl	%eax, %ecx                                  ; Move eax into ecx

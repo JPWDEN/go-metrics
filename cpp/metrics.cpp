@@ -31,18 +31,18 @@ int main()
     ofstream file;
     file.open("hanoi-time-c");
 
-    int discs = 15;
-    for (int disc = 3; disc < discs; disc = disc + 2)
+    int discs = 31;
+    for (int disc = 3; disc <= discs; disc = disc + 2)
     {
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 10; i++)
         {
             auto start = std::chrono::system_clock::now();
-            Hanoi(discs, '1', '2', '3');
+            Hanoi(disc, '1', '2', '3');
             auto end = std::chrono::system_clock::now();
 
             chrono::duration<double> elapsed = end - start;
             std::cout << disc << " discs: " << elapsed.count() << "s\n";
-            file << disc << " discs: " << elapsed.count() << "s\n";
+            file << elapsed.count() << "\n";
         }
     }
     file.close();

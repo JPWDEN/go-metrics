@@ -173,7 +173,7 @@ func main() {
 	}
 	defer file.Close()
 	discs := 15 //Number of discs
-	for disc := 2; disc < discs; disc = disc + 2 {
+	for disc := 3; disc <= discs; disc = disc + 2 {
 		for i := 0; i < exNum; i++ {
 			start := time.Now()
 			hanoi(disc, "peg 1", "peg 2", "peg 3")
