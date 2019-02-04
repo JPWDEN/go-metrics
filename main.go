@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"runtime"
 	"strings"
+	"syscall"
 	"time"
 )
 
@@ -16,7 +16,22 @@ const (
 	file2        = "previewDebug-3892.txt"
 )
 
-var statsList []runtime.MemStats
+type monitor struct {
+	Alloc,
+	TotalAlloc,
+	Sys,
+	StackSys,
+	Mallocs,
+	Frees,
+	LiveObjects,
+	PauseTotalNs uint64
+
+	NumGC        uint32
+	NumGoroutine int
+}
+
+//var stats []monitor
+var stats []syscall.Rusage
 
 func caseDisassemble() {
 	aNum := 5
@@ -156,8 +171,23 @@ func processLCS(str1 string, str2 string) (int, []string) {
 }
 
 func hanoi(discs int, from string, to string, aux string) {
-	var stats runtime.MemStats
-	statsList = append(statsList, stats)
+	//var m monitor
+	//var rtm runtime.MemStats
+	//runtime.ReadMemStats(&rtm)
+	//m.Alloc = rtm.Alloc
+	//m.TotalAlloc = rtm.TotalAlloc
+	//m.Sys = rtm.Sys
+	//m.StackSys = rtm.StackSys
+	//m.Mallocs = rtm.Mallocs
+	//m.Frees = rtm.Frees
+	//m.LiveObjects = m.Mallocs - m.Frees // Live objects = Mallocs - Frees
+	//stats = append(stats, m)
+
+	var ru syscall.Rusage
+	err := syscall.Getrusage(0, &ru)
+	if err == nil {
+		stats = append(stats, ru)
+	}
 
 	if discs == 1 {
 		return
@@ -172,6 +202,7 @@ func main() {
 		log.Fatal("Cannot create file", err)
 	}
 	defer file.Close()
+
 	discs := 15 //Number of discs
 	for disc := 3; disc <= discs; disc = disc + 2 {
 		for i := 0; i < exNum; i++ {
@@ -180,6 +211,18 @@ func main() {
 			elapsed := time.Since(start)
 			fmt.Printf("%d: %s\n", disc, elapsed.String())
 			fmt.Fprintf(file, "%d discs: %s\n", disc, elapsed.String())
+		}
+	}
+
+	file2, err := os.Create("hanoi-mem-go")
+	if err != nil {
+		log.Fatal("Cannot create file", err)
+	}
+	defer file.Close()
+	hanoi(23, "peg 1", "peg 2", "peg 3")
+	for i := range stats {
+		if i > 0 && stats[i].Maxrss != stats[i-1].Maxrss {
+			fmt.Fprintf(file2, "%d\n", stats[i].Maxrss)
 		}
 	}
 
