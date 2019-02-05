@@ -32,6 +32,9 @@ void RunThread()
 
 int main()
 {
+    cout << "pi/4: " << M_PI / 4 << ", estimate: " << atan(tan(M_PI/4)) << endl;
+    cout << "pi - 0.00005: " << M_PI - 0.00005 << ", estimate: " << atan(tan(M_PI - 0.00005)) << endl;
+
     thread t1(RunThread);
     thread t2(RunThread);
     thread t3(RunThread);

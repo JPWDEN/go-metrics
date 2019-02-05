@@ -254,6 +254,9 @@ func main() {
 	wg.Add(3)
 
 	//Run floating-point operations in some go routines
+	fmt.Printf("pi / 4: %f, estimate: %f\n", math.Pi/4, math.Atan(math.Tan(math.Pi/4)))
+	fmt.Printf("pi - 0.00005: %f, estimate: %f\n", math.Pi-0.00005, math.Atan(math.Tan(math.Pi-0.00005)))
+
 	go func() {
 		defer wg.Done()
 		runThread()
