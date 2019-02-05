@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"log"
+	"math"
 	"os"
 	"strings"
+	"sync"
 	"syscall"
 	"time"
 )
@@ -196,40 +197,100 @@ func hanoi(discs int, from string, to string, aux string) {
 	hanoi(discs-1, aux, to, from)
 }
 
+func runThread() {
+	count := 0
+	temp := 0.0
+	for i := 0.0; i <= 10.0; i += 0.00005 {
+		temp = math.Atan(math.Tan(i))
+		if i != temp {
+			count++
+		}
+	}
+	fmt.Println(count)
+}
+
 func main() {
-	file, err := os.Create("hanoi-time-go")
-	if err != nil {
-		log.Fatal("Cannot create file", err)
-	}
-	defer file.Close()
+	//file, err := os.Create("hanoi-time-go")
+	//if err != nil {
+	//	log.Fatal("Cannot create file", err)
+	//}
+	//defer file.Close()
 
-	discs := 15 //Number of discs
-	for disc := 3; disc <= discs; disc = disc + 2 {
-		for i := 0; i < exNum; i++ {
-			start := time.Now()
-			hanoi(disc, "peg 1", "peg 2", "peg 3")
-			elapsed := time.Since(start)
-			fmt.Printf("%d: %s\n", disc, elapsed.String())
-			fmt.Fprintf(file, "%d discs: %s\n", disc, elapsed.String())
-		}
-	}
+	//Process hanoi elapsed run times
+	//discs := 15 //Number of discs
+	//for disc := 3; disc <= discs; disc = disc + 2 {
+	//	for i := 0; i < exNum; i++ {
+	//		start := time.Now()
+	//		hanoi(disc, "peg 1", "peg 2", "peg 3")
+	//		elapsed := time.Since(start)
+	//		fmt.Printf("%d: %s\n", disc, elapsed.String())
+	//		fmt.Fprintf(file, "%d discs: %s\n", disc, elapsed.String())
+	//	}
+	//}
 
-	file2, err := os.Create("hanoi-mem-go")
-	if err != nil {
-		log.Fatal("Cannot create file", err)
-	}
-	defer file.Close()
-	hanoi(23, "peg 1", "peg 2", "peg 3")
-	for i := range stats {
-		if i > 0 && stats[i].Maxrss != stats[i-1].Maxrss {
-			fmt.Fprintf(file2, "%d\n", stats[i].Maxrss)
-		}
-	}
+	//Run hanoi with memory metrics
+	//file2, err := os.Create("hanoi-mem-go")
+	//if err != nil {
+	//	log.Fatal("Cannot create file", err)
+	//}
+	//defer file.Close()
+	//hanoi(23, "peg 1", "peg 2", "peg 3")
+	//for i := range stats {
+	//	if i > 0 && stats[i].Maxrss != stats[i-1].Maxrss {
+	//		fmt.Fprintf(file2, "%d\n", stats[i].Maxrss)
+	//	}
+	//}
 
+	//Time LCS algorithm
 	start := time.Now()
 	lcsInit()
 	elapsed := time.Since(start)
 	fmt.Println(elapsed)
 
 	caseDisassemble()
+
+	stats = nil
+	var wg sync.WaitGroup
+	wg.Add(3)
+
+	//Run floating-point operations in some go routines
+	go func() {
+		defer wg.Done()
+		runThread()
+	}()
+	go func() {
+		defer wg.Done()
+		runThread()
+	}()
+	go func() {
+		defer wg.Done()
+		runThread()
+	}()
+	wg.Wait()
+
+	//Run thread pool and capture memory metrics
+	//var mtx sync.Mutex
+	//stats = nil
+	//size := 10000
+	//wg.Add(size)
+	//for i := 0; i < size; i++ {
+	//	go func(i int) {
+	//		defer wg.Done()
+	//		runThread()
+	//		var ru syscall.Rusage
+	//		err := syscall.Getrusage(0, &ru)
+	//		if err == nil {
+	//			mtx.Lock()
+	//			stats = append(stats, ru)
+	//			mtx.Unlock()
+	//		}
+	//	}(i)
+	//}
+	//wg.Wait()
+	//
+	//for i := range stats {
+	//	if i > 0 && stats[i].Maxrss != stats[i-1].Maxrss {
+	//		fmt.Printf("%d\n", stats[i].Maxrss)
+	//	}
+	//}
 }
