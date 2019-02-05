@@ -200,7 +200,7 @@ func hanoi(discs int, from string, to string, aux string) {
 func runThread() {
 	count := 0
 	temp := 0.0
-	for i := 0.0; i <= 10.0; i += 0.00005 {
+	for i := 0.0; i <= 4*math.Pi; i += 0.00005 {
 		temp = math.Atan(math.Tan(i))
 		if i != temp {
 			count++

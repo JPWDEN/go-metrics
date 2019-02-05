@@ -6,6 +6,7 @@
 #include <mutex>
 #include <sys/resource.h>
 #include <cmath>
+#include <math.h>
 #include <vector>
 
 using namespace std;
@@ -20,7 +21,7 @@ void RunThread()
 {
     int count = 0;
     double temp = 0;
-    for (double i = 0.0; i <= 10.0; i += 0.00005)
+    for (double i = 0.0; i <= 4 * M_PI; i += 0.00005)
     {
         temp = atan(tan(i));
         if (i != temp)
@@ -31,7 +32,6 @@ void RunThread()
 
 int main()
 {
-
     thread t1(RunThread);
     thread t2(RunThread);
     thread t3(RunThread);
